@@ -1,0 +1,133 @@
+<head>
+    <style type="text/css">
+        #main,
+        .map_container {
+            position: relative;
+        }
+
+        #main {
+            width: 686px;
+            height: 860px;
+            border: 1px solid #ddd;
+            margin-bottom: 32px;
+            background: #f3f3f3
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 疫情地图 -->
+    <div class="map_block mb">
+        <div class="big_tit">疫情地图</div>
+        <div class="wrap">
+            <!--             <div class="map_container">
+                <div id="main" _echarts_instance_="ec_1580389564954"
+                    style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative;">
+                    <div
+                        style="position: relative; width: 684px; height: 858px; padding: 0px; margin: 0px; border-width: 0px; cursor: default;">
+                        <canvas data-zr-dom-id="zr_0" width="1368" height="1716"
+                            style="position: absolute; left: 0px; top: 0px; width: 684px; height: 858px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas>
+                    </div>
+                    <div></div>
+                </div>
+                <div class="map_others">
+                    <p>海外确诊病例：泰国14例，日本11例</p>
+                    <p>新加坡10例，马来西亚8例，澳大利亚8例</p>
+                    <p>韩国6例，美国5例，法国5例</p>
+                    <p>德国4例，阿联酋4例，加拿大3例</p>
+                    <p>越南5例，芬兰1例，尼泊尔1例</p>
+                    <p>斯里兰卡1例，柬埔寨1例</p>
+                    <p>印度1例，菲律宾1例</p>
+                </div>
+                <p class="map_tips">单击省份可查看病例数</p>
+            </div> -->
+            <div class="map_container">
+                <div id="main"></div>
+                <div class="map_others">
+                    <p>海外确诊病例：泰国14例，日本11例</p>
+                    <p>新加坡10例，马来西亚8例，澳大利亚8例</p>
+                    <p>韩国6例，美国5例，法国5例</p>
+                    <p>德国4例，阿联酋4例，加拿大3例</p>
+                    <p>越南5例，芬兰1例，尼泊尔1例</p>
+                    <p>斯里兰卡1例，柬埔寨1例</p>
+                    <p>印度1例，菲律宾1例</p>
+                </div>
+                <p class="map_tips">单击省份可查看病例数</p>
+            </div>
+            <div class="line_chart">
+                <div id="line_chart"></div>
+            </div>
+            <ul>
+            </ul>
+            <p class="tips">以上数据均来自官方通报</p>
+        </div>
+    </div>
+
+    <script src="../data/data.js"></script>
+    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.6.0/echarts.min.js"></script>
+    <script src="https://gallery.echartsjs.com/dep/echarts/map/js/china.js"></script>
+    <script>
+        map();
+
+        function map() {
+            var A, P, O;
+            window.epidemic && function () {
+                function t(t) { return 9 < t ? "" + t : "0" + t }
+                var e, n = {};
+                window.epidemic.map(function (t) { n[t.province] || (n[t.province] = {}, n[t.province].name = t.province, n[t.province].cities = [], n[t.province].confirm = 0, n[t.province].suspect = 0, n[t.province].dead = 0, n[t.province].heal = 0); var e = n[t.province]; e.cities.push(t), e.confirm += parseInt(t.confirm), e.suspect += parseInt(t.suspect), e.heal += parseInt(t.heal), e.dead += parseInt(t.dead) }),
+                    console.log(n);
+                var i = [], o = "";
+                for (var r in n) i.push(n[r]);
+                i.sort(function (t, e) { return t.confirm !== e.confirm ? e.confirm - t.confirm : e.dead - t.dead }),
+                    console.log(i),
+                    i.map(function (t) { t.value = t.confirm; var e = ""; t.dead && (e = "，死亡".concat(t.dead, "例")); var i = ""; if (t.cities && t.cities.length) { var n = []; n = t.cities.slice().sort(function (t, e) { return e.confirm - t.confirm }), i += "<ul>", n.map(function (t) { var e = ""; t.dead && (e = "死亡".concat(t.dead, "例")); var n = ""; t.confirm ? n = "确诊".concat(t.confirm, "例") : t.suspect && (n = "疑似".concat(t.suspect, "例")), i += "<li><span>".concat(t.name, "</span>").concat(n).concat(n && e ? "，" : "").concat(e, "</li>") }), i += "</ul>" } var r = ""; 1 <= t.value ? r = "确诊".concat(t.value, "例") : t.suspect && (r = "疑似".concat(t.suspect, "例")); o += '<li class="hasCities"><div class="province"><strong>'.concat(t.name, "</strong>").concat(r).concat(e, "</div>").concat(i).concat("", "</li>") });
+                for (var a = "", s = [], l = $(".map_block .map_others p"), u = 0; u < l.length; u++) { l[u].innerText.replace(/^.*：/g, "").replace(/，/g, ",").split(",").map(function (t) { var e = t.match(/([^\d]+)([\d]+)例/) || ["", "", ""]; e[1] && e[2] && s.push({ country: e[1], confirm: e[2] }) }) }
+                s.sort(function (t, e) { return e.confirm - t.confirm }),
+                    s.length && (a += '<div class="overseas_tit">海外国家与地区</div><ul>', s.map(function (t) { a += '<li class="overseas"><strong>'.concat(t.country, "</strong>确诊").concat(t.confirm, "例</li>") }), a += "</ul>"),
+                    $(".map_block>.wrap>ul").html(o).after(a),
+                    $(".map_block .hasCities .province").on("click", function () { $(this).parent().toggleClass("active") });
+                var h = i.slice(); h.map(function (t) { !t.value && t.suspect && (t.value = .5) });
+                console.log(h);
+
+                var myChart = echarts.init(document.getElementById('main'));
+                var option = {
+                    tooltip: {
+                        triggerOn: "click",
+                        formatter: function (t, e, n) { return .5 == t.value ? t.name + "：有疑似病例" : t.seriesName + "<br />" + t.name + "：" + t.value }
+                    },
+                    visualMap: {
+                        min: 0, max: 5e3, left: 26, bottom: 70, showLabel: !0, text: ["高", "低"],
+                        pieces: [{ gte: 1e3, label: "≥ 1000 人", color: "#7f1100" }, { gte: 100, lt: 1e3, label: "100 - 999 人", color: "#ff5428" }, { gte: 10, lt: 100, label: "10 - 99 人", color: "#ff8c71" }, { gte: 1, lt: 10, label: "1 - 9 人", color: "#ffc0b1" }, { gt: 0, lt: 1, label: "疑似", color: "#ffd667" }, { value: 0, color: "#ffffff" }],
+                        show: !0
+                    },
+                    geo: { map: "china", roam: !1, scaleLimit: { min: 1, max: 2 }, zoom: 1.23, top: 120, label: { normal: { show: !0, fontSize: "14", color: "rgba(0,0,0,0.7)" } }, itemStyle: { normal: { borderColor: "rgba(0, 0, 0, 0.2)" }, emphasis: { areaColor: "#45cfff", shadowOffsetX: 0, shadowOffsetY: 0, borderWidth: 0 } } },
+                    series: [{ name: "确诊病例", type: "map", geoIndex: 0, data: h }]
+                };
+                myChart.setOption(option);
+                console.log(1111);
+
+            }();
+        }
+
+        function linchart() {
+
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('line_chart'));
+
+            // 指定图表的配置项和数据
+            var option = {
+                grid: {
+                    left: "5%", right: "5%", bottom: "70", top: "3%", containLabel: !0
+                },
+                legend: { data: ["确诊", "治愈", "疑似", "死亡"], icon: "roundRect", left: 30, bottom: 0, textStyle: { fontSize: 28, color: "#666" } },
+                xAxis: (e = { type: "category", boundaryGap: !1, axisLabel: { fontSize: 20, color: "#595757" } }, I(e, "boundaryGap", ["30%", "30%"]), I(e, "axisTick", { show: !1 }), I(e, "data", v.map(function (t) { return t.date }) || ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]), e),
+                yAxis: { type: "value", axisLabel: { fontSize: 20, color: "#595757" }, axisLine: { show: !1 }, axisTick: { show: !1 }, minInterval: 1, min: 0 },
+                series: ["确诊", "治愈", "疑似", "死亡"].map(function (t, e) { return { name: t, type: "line", symbolSize: 8, lineStyle: { width: 4 }, itemStyle: { color: O[x[e]] }, data: v.map(function (t) { return t[x[e]] }) } })
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        }
+    </script>
+</body>
